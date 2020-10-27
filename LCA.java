@@ -45,7 +45,7 @@ public class LCA {
 	    
 	    Node lca(Node node, int n1, int n2)  
 	    { 
-	        if (node == null) 
+	        if (node == null || !search(root,n1) || !search(root,n2)) 
 	            return null; 
 	   
 	        // If both n1 and n2 are smaller than root, then LCA lies in left 
@@ -58,6 +58,20 @@ public class LCA {
 	   
 	        return node; 
 	    } 
+	    
+	    public boolean search (Node root, int n1) {
+	    	
+	    	if(root.key==n1) return true;
+	    	if(root.key>n1) {
+	    		if(root.left == null) return false;
+	    		else return search(root.left,n1);
+	    	}
+	    	if(root.key<n1) {
+	    		if(root.right == null) return false;
+	    		return search(root.right, n1);
+	    	}
+	    	else return false;	
+	    }
 	  
 	   
 	    public static void main(String[] args) { 
