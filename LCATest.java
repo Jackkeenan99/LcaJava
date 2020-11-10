@@ -38,5 +38,23 @@ public class LCATest {
         assertFalse("check if key is in tree -- 99  is not", tree.search(tree.root,99));
 		
 	}
+	
+	@Test
+	public void isAcyclic() {
+		DirectedGraph test = new DirectedGraph(0);
+		assertFalse("empty graph so should be no cycles", LCA.hasCycles(test));
+		test = new DirectedGraph(1);
+		test.addEdge(0, 0);
+		assertTrue("Cycle - vertex has an edge that goes to itself", LCA.hasCycles(test));
+		test = new DirectedGraph(4);
+		test.addEdge(0, 1);
+		test.addEdge(1, 2);
+		test.addEdge(2, 3);
+		assertFalse("Graph with no cycles", LCA.hasCycles(test) );
+		test.addEdge(3, 0);
+		assertTrue("Graph that now has a cycle", LCA.hasCycles(test));
+		
+	}
+	
 
 }
