@@ -1,9 +1,13 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Iterator;
+import java.util.Stack;
+
+//code added that deals with DAG aswell as Binary tree
 
 public class LCA {
 	
-	//here  
+	
 	    class Node { 
 	        int key; 
 	        Node left, right; 
@@ -76,66 +80,139 @@ public class LCA {
 	    	else return false;	
 	    }
 	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
+	    // check if it is a DAG
 	    public static boolean hasCycles(DirectedGraph g) {
 	    	boolean[] visited = new boolean[g.V];
 			boolean[] stack = new boolean[g.V];
-
 			for (int i = 0; i < g.V; i++) {
-				if (isCyclicRecursive(i, visited, stack, g)) {
+				if (hasCycles(i, visited, stack, g)) {
 					return true;
 				}
 			}
 			return false;
 	    	
 	    }
-	 // Recursive util method which traverses graph checking for cycles
-		private static boolean isCyclicRecursive(int i, boolean[] visited, boolean[] stack, DirectedGraph graph) {
+
+		private static boolean hasCycles(int i, boolean[] visited, boolean[] stack, DirectedGraph graph) {
 			if (stack[i]) {
 				return true;
 			}
 			if (visited[i]) {
 				return false;
 			}
-
 			visited[i] = true;
 			stack[i] = true;
-
 			List<Integer> children = graph.adj.get(i);
-
 			for (Integer c : children) {
-				if (isCyclicRecursive(c, visited, stack, graph)) {
+				if (hasCycles(c, visited, stack, graph)) {
 					return true;
 				}
 			}
-
 			stack[i] = false;
-
 			return false;
 		}
-	  
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
+
+
+		// if LCA does not exist return max int
+		public static int findLCA(DirectedGraph graph, int v, int w) {
+			if (graph.E != 0 && graph.isVertexValid(v) && graph.isVertexValid(w)) {
+				if (!hasCycles(graph)) {		// make sure its a DAG
+					int r = findRoot(graph);		// find the root of the graph where the indegree is 0
+					List<Integer> first = vertexAncestors(graph, r, v); // first set of ancestors relating to v
+					List<Integer> second= vertexAncestors(graph, r, w); // second set of ancestors relating to W
+					int[] firstArray = first.stream().mapToInt(i -> (int) i).toArray(); // change list to array
+					int[] secondArray = second.stream().mapToInt(i -> (int) i).toArray(); // change list to array
+					int j, k, temp, depth;
+					List<Integer> common = new ArrayList<Integer>(); // common ancestor that v and w have 
+
+					for (j = 0; j < firstArray.length; j++) {
+						for (k = 0; k < secondArray.length; k++) {
+							if (firstArray[j] == secondArray[k]) {
+								common.add(firstArray[j]);							// common ancestor found
+							}
+						}
+					}
+					int[] commonArray = common.stream().mapToInt(i -> (int) i).toArray();
+					for (j = 1; j < commonArray.length; j++) {
+						temp = commonArray[j];
+						depth = depth(graph, r, commonArray[j]);
+						for (k = j - 1; k >= 0; k--) {
+							if (depth > depth(graph, r, commonArray[k])) {	
+								commonArray[k + 1] = commonArray[k];
+								commonArray[k] = temp;
+							}
+						}
+					}
+					return commonArray[0];		// vertex with the greatest distance from root is stored here so return 
+				} 
+			}
+			return Integer.MAX_VALUE;
+			}
+				
+		// Find vertex with indegree = 0 i.e the root
+		public static int findRoot(DirectedGraph graph) {
+			int vertex = 0;
+			for (int i = 0; i < graph.V; i++) {
+				if (graph.indegree(i) == 0 && !graph.adj.get(i).isEmpty()) {
+					vertex = i;
+				}
+			}
+			return vertex;
+		}
+
+		// Find how far from the root a vertex is
+		public static int depth(DirectedGraph graph, int root, int vertex) {
+			Stack<Integer> visited = new Stack<Integer>();
+			int depth = 0;
+			return depth(graph, root, vertex, depth, visited);
+		}
+
+		private static int depth(DirectedGraph graph, int current, int target, int depth,
+				Stack<Integer> visitedVertices) {
+			if (current == target) {
+				visitedVertices.push(current);
+				return visitedVertices.size() - 1;		//number of vertices - current is the depth 
+			}
+
+			visitedVertices.push(current);
+			Iterator<Integer> i = graph.adj.get(current).listIterator();
+			while (i.hasNext()) {
+				int newVertex = i.next();
+				if (!visitedVertices.contains(newVertex)) {
+					depth = depth(graph, newVertex, target, depth, visitedVertices);
+					if (!visitedVertices.empty()) {
+						visitedVertices.pop();
+					}
+				}
+			}
+			return depth;
+		}
+
+		// Method which returns a list of vertices which are the ancestors
+		public static List<Integer> vertexAncestors(DirectedGraph graph, int root, int vertex) {
+			List<Integer> visited = new ArrayList<Integer>();
+			List<Integer> ancestors = new ArrayList<Integer>();
+			DirectedGraph reversedGraph = graph.reverse();			// reverse the graph to get the ancestor of each node
+			ancestors.addAll(vertexAncestors(reversedGraph, vertex, visited));
+			return ancestors;
+		}
+
+		private static List<Integer> vertexAncestors(DirectedGraph graph, int currentVertex,
+				List<Integer> visited) {
+			visited.add(currentVertex);
+
+			Iterator<Integer> i = graph.adj.get(currentVertex).listIterator();
+			while (i.hasNext()) {
+				int newVertex = i.next();
+				if (!visited.contains(newVertex)) {
+					vertexAncestors(graph, newVertex, visited);
+				}
+			}
+
+			return visited;
+		}
+
+ 
 	  
 	 /*  
 	    public static void main(String[] args) { 
