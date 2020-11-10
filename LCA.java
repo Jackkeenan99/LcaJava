@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class LCA {
 	
 	//here  
@@ -72,12 +75,73 @@ public class LCA {
 	    	}
 	    	else return false;	
 	    }
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    public static boolean hasCycles(DirectedGraph g) {
+	    	boolean[] visited = new boolean[g.V];
+			boolean[] stack = new boolean[g.V];
+
+			for (int i = 0; i < g.V; i++) {
+				if (isCyclicRecursive(i, visited, stack, g)) {
+					return true;
+				}
+			}
+			return false;
+	    	
+	    }
+	 // Recursive util method which traverses graph checking for cycles
+		private static boolean isCyclicRecursive(int i, boolean[] visited, boolean[] stack, DirectedGraph graph) {
+			if (stack[i]) {
+				return true;
+			}
+			if (visited[i]) {
+				return false;
+			}
+
+			visited[i] = true;
+			stack[i] = true;
+
+			List<Integer> children = graph.adj.get(i);
+
+			for (Integer c : children) {
+				if (isCyclicRecursive(c, visited, stack, graph)) {
+					return true;
+				}
+			}
+
+			stack[i] = false;
+
+			return false;
+		}
 	  
-	   
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	  
+	 /*  
 	    public static void main(String[] args) { 
 	        LCA tree = new LCA(); 
 	  
-	        /* Let us create following BST 
+	         Let us create following BST 
 	              50 
 	           /     \ 
 	          30      70 
@@ -92,7 +156,7 @@ public class LCA {
 	        tree.insert(40); 
 	        tree.insert(70); 
 	        tree.insert(n1); 
-	        tree.insert(n2); */
+	        tree.insert(n2); 
 	        
 	        int n1 = 5;
 	        int n2 = 14;
@@ -107,7 +171,7 @@ public class LCA {
 	        Node t = tree.lca(tree.root, n1, n2); 
 	        System.out.println("LCA of " + n1 + " and " + n2 + " is " + t.key);
 	        
-	    } 
+	    } */
 	} 
 	
 
