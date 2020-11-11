@@ -1,7 +1,7 @@
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-
+import org.junit.Assert;
 
 public class LCATest {					// TESTS BOTH DAG AND BST
 
@@ -57,7 +57,6 @@ public class LCATest {					// TESTS BOTH DAG AND BST
         assertFalse("check if key is in tree -- 99  is not", tree.search(tree.root,99));
 		
 	}
-	
 	@Test 
 	public void findRootOfDAG() {
 		DirectedGraph d = new DirectedGraph(2);
@@ -65,10 +64,35 @@ public class LCATest {					// TESTS BOTH DAG AND BST
 		assertEquals("Tree with only 2 nodes", 0, LCA.findRoot(d));
 		DirectedGraph dg = new DirectedGraph(5);
 		dg.addEdge(0,1);
+		dg.addEdge(0,2);
 		dg.addEdge(1,2);
 		dg.addEdge(2,3);
 		dg.addEdge(2,4);
-		assertEquals("first node entered is the root", 0, LCA.findRoot(dg));
+		assertEquals("0 has no indegrees so is the root", 0, LCA.findRoot(dg));
+	}
+	@Test
+	public void DAGDept() {
+		
+		DirectedGraph dg = new DirectedGraph(4);
+		dg.addEdge(0,1);
+		assertEquals("DAG has depth of 0 when given root edge", 0, LCA.depth(dg, 0, 0));
+		dg.addEdge(0,2);
+		dg.addEdge(1,2);
+		dg.addEdge(2,3);
+		assertEquals("DAG has depth of 2 when given edge 3", 2, LCA.depth(dg, 0, 3));	
+	}
+	@Test
+	public void ancestors() {
+		DirectedGraph dg = new DirectedGraph(5);
+		dg.addEdge(0,1);
+		int[] result = new int[]{0};
+		Assert.assertArrayEquals("Ancestors of root is root",  result ,LCA.vertexAncestors(dg, 0, 0).stream().mapToInt(i->i).toArray());
+		dg.addEdge(0,2);
+		dg.addEdge(1,2);
+		dg.addEdge(2,3);
+		dg.addEdge(2,4);
+		int[] result1 = new int[]{4,2,0,1};
+		Assert.assertArrayEquals("Ancestors of 4 are 4,2,0,1",  result1 ,LCA.vertexAncestors(dg, 0, 4).stream().mapToInt(i->i).toArray());
 	}
 	
 	
