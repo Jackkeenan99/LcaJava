@@ -213,42 +213,6 @@ public class LCA {
 		}
 
  
-	  
-	 /*  
-	    public static void main(String[] args) { 
-	        LCA tree = new LCA(); 
-	  
-	         Let us create following BST 
-	              50 
-	           /     \ 
-	          30      70 
-	         /  \    /  \ 
-	       20   40  60   80 
-	        
-	        int n1 = 60;
-	        int n2 = 80;
-	        tree.insert(50); 
-	        tree.insert(30); 
-	        tree.insert(20); 
-	        tree.insert(40); 
-	        tree.insert(70); 
-	        tree.insert(n1); 
-	        tree.insert(n2); 
-	        
-	        int n1 = 5;
-	        int n2 = 14;
-	        tree.insert(15); 
-	        tree.insert(10); 
-	        tree.insert(20); 
-	        tree.insert(13); 
-	        tree.insert(12); 
-	        tree.insert(n1); 
-	        tree.insert(n2); 
-	  
-	        Node t = tree.lca(tree.root, n1, n2); 
-	        System.out.println("LCA of " + n1 + " and " + n2 + " is " + t.key);
-	        
-	    } */
 	} 
 	
 
