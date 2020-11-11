@@ -57,6 +57,28 @@ public class LCATest {					// TESTS BOTH DAG AND BST
         assertFalse("check if key is in tree -- 99  is not", tree.search(tree.root,99));
 		
 	}
+	@Test
+	public void DAGLca() {
+		DirectedGraph graph = new DirectedGraph(10);
+		graph.addEdge(0, 1);
+		assertEquals("0 is the LCA of 0 and 0", 0, LCA.findLCA(graph, 0, 0));
+		graph.addEdge(0, 2);
+		graph.addEdge(1, 3);
+		graph.addEdge(3, 5);
+		graph.addEdge(2, 4);
+		graph.addEdge(4, 6);
+		assertEquals("6 is the LCA of 6 and 6", 6, LCA.findLCA(graph, 6, 6));
+		graph.addEdge(4, 7);
+		graph.addEdge(6, 9);
+		graph.addEdge(9, 8);
+		assertEquals("4 is the lca of 6 and 7", 4, LCA.findLCA(graph, 6, 7));
+		assertEquals("9 is the lca of 8 and 9 ", 9, LCA.findLCA(graph, 8, 9));
+		assertEquals("the root is the lca of 1 and 6 ", 0, LCA.findLCA(graph, 1, 6));
+		assertEquals("the root is the lca of 3 and 9", 0, LCA.findLCA(graph, 3, 9));	
+		assertEquals("23 not in list so return max int", Integer.MAX_VALUE, LCA.findLCA(graph, 23, 9));
+	}
+	
+
 	@Test 
 	public void findRootOfDAG() {
 		DirectedGraph d = new DirectedGraph(2);
@@ -82,7 +104,7 @@ public class LCATest {					// TESTS BOTH DAG AND BST
 		assertEquals("DAG has depth of 2 when given edge 3", 2, LCA.depth(dg, 0, 3));	
 	}
 	@Test
-	public void ancestors() {
+	public void ancestorsDAG() {
 		DirectedGraph dg = new DirectedGraph(5);
 		dg.addEdge(0,1);
 		int[] result = new int[]{0};
